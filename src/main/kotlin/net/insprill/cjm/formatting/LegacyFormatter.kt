@@ -12,7 +12,7 @@ class LegacyFormatter : Formatter {
     private val formattedHexPattern = Pattern.compile("[?:{<&]?#[a-fA-F\\d]{6}[}>]?")
 
     override fun format(str: String): Array<BaseComponent> {
-        var workingStr = str
+        var workingStr = LegacyGradientUtils.parseGradients(str)
         if (MinecraftVersion.isAtLeast(MinecraftVersion.v1_16_0)) {
             val formattedMatcher = formattedHexPattern.matcher(workingStr)
             while (formattedMatcher.find()) {

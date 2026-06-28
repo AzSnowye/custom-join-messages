@@ -7,6 +7,8 @@ import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.chat.ComponentSerializer
 import org.bukkit.Bukkit
+import java.util.Locale
+import java.util.regex.Pattern
 
 class MiniMessageFormatter : Formatter {
 
@@ -32,14 +34,30 @@ class MiniMessageFormatter : Formatter {
     private fun convertLegacyCodes(str: String): String {
         var newStr = str
 
-        LEGACY_REPLACEMENTS.forEach {
-            newStr = newStr.replace("&${it.key}", it.value)
+        // Convert common legacy hex wrappers into MiniMessage hex tags.
+        val formattedHexMatcher = FORMATTED_HEX_PATTERN.matcher(newStr)
+        while (formattedHexMatcher.find()) {
+            val wrappedHex = formattedHexMatcher.group()
+            val hex = wrappedHex.substring(1, 8)
+            newStr = newStr.replace(wrappedHex, "<$hex>")
         }
 
-        return newStr
+        val legacyMatcher = LEGACY_COLOR_PATTERN.matcher(newStr)
+        val sb = StringBuffer()
+        while (legacyMatcher.find()) {
+            val code = legacyMatcher.group(2).lowercase(Locale.ROOT)
+            val replacement = LEGACY_REPLACEMENTS[code] ?: legacyMatcher.group()
+            legacyMatcher.appendReplacement(sb, replacement)
+        }
+        legacyMatcher.appendTail(sb)
+
+        return sb.toString()
     }
 
     companion object {
+        private val LEGACY_COLOR_PATTERN = Pattern.compile("([&§])([0-9a-fk-orA-FK-OR])")
+        private val FORMATTED_HEX_PATTERN = Pattern.compile("[<{&]#[a-fA-F\\d]{6}[>}]?")
+
         val LEGACY_REPLACEMENTS = HashMap<String, String>()
 
         init {

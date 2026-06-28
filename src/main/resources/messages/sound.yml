@@ -16,6 +16,16 @@ Public:
   Join:
     1:
       Permission: cjm.default
+      Player-Type: JAVA
+      Sounds:
+        1:
+          Sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
+          Volume: 10.0
+          Pitch: 1.0
+          Global: true
+    2:
+      Permission: cjm.default
+      Player-Type: BEDROCK
       Sounds:
         1:
           Sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
@@ -25,6 +35,16 @@ Public:
   Quit:
     1:
       Permission: cjm.default
+      Player-Type: JAVA
+      Sounds:
+        1:
+          Sound: "ENTITY_GENERIC_SMALL_FALL"
+          Volume: 10.0
+          Pitch: 1.0
+          Global: true
+    2:
+      Permission: cjm.default
+      Player-Type: BEDROCK
       Sounds:
         1:
           Sound: "ENTITY_GENERIC_SMALL_FALL"

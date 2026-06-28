@@ -75,6 +75,10 @@
 * 🗝️ Permission-Based Messages
     * Send different messages based on what permissions a user has
 
+* 🎛️ Player Selection GUI
+    * Let players choose from the message variants they have permission to use
+    * Open it with `/cjm gui`
+
 * 🎛️ Message Conditions
     * Radius
     * Min/Max Online Players
@@ -116,6 +120,30 @@ Builds from the latest commit can be downloaded via the [Snapshot Hangar channel
 ## Usage
 
 Unsure how something works? All documentation can be found on the [wiki][wiki-url].
+
+Players with access to the command can open the selection menu with `/cjm gui` and pick any valid custom join message variant they are permitted to use.
+
+The action menu is focused on `Join` and `Leave` selections. GUI titles/buttons/default item style can be customized in `gui.yml`.
+
+To use MiniMessage syntax, set `formatting.formatter` to `MINIMESSAGE` in `config.yml` (Paper 1.18.2+).
+
+You can also customize each selectable GUI item directly in your message files:
+
+```yml
+Public:
+  Join:
+    1:
+      Permission: cjm.default
+      Display:
+        Material: HDB:24888 # or any Material, e.g. PAPER
+        Name: "&aJoin Message #%id%"
+        Lore:
+          - "&7Permission: &f%permission%"
+          - "&7Preview: &f%preview%"
+      Messages:
+        1:
+          - "&a%name% joined!"
+```
 
 
 

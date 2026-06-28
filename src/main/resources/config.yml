@@ -43,6 +43,7 @@ formatting:
   # This value is CaSe-SeNsItIvE! Ensure it's typed exactly the same as the example.
   formatter: LEGACY
 
+
 # If true, messages will be sent when players change worlds instead
 # of only when they join the server. This also only sends messages to players who are in the same world.
 # The Overworld, Nether, and End all count as the same world.

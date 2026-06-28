@@ -46,6 +46,17 @@ class MiniMessageFormatterTest {
         assertEquals("§f§aHello,§f §b§lworld!", format("&aHello,&r &b&lworld!"))
     }
 
+    @Test
+    fun format_LegacyUppercaseAndSectionCodes() {
+        assertEquals("§f§aHello,§f §b§lworld!", format("§AHello,§R §B§Lworld!"))
+    }
+
+    @Test
+    fun format_LegacyHexWrappers() {
+        assertEquals("§x§0§0§A§F§5§CHowdy!", format("{#00af5c}Howdy!"))
+        assertEquals("§x§0§0§A§F§5§CHowdy!", format("&#00af5cHowdy!"))
+    }
+
     private fun format(string: String): String {
         return TextComponent.toLegacyText(*formatter.format(string))
     }

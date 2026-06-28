@@ -4,6 +4,7 @@ import de.leonhard.storage.internal.FlatFile
 import net.insprill.cjm.CustomJoinMessages
 import net.insprill.cjm.extension.getMessage
 import net.insprill.cjm.message.types.MessageType
+import net.insprill.cjm.message.MessageVisibility
 import net.insprill.cjm.util.CrossPlatformScheduler
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -62,13 +63,13 @@ class MessageSender(private val plugin: CustomJoinMessages) {
             for (msg in typeMap.values.filter { it.isEnabled }) {
                 val path = visibility.configSection + "." + action.configSection
 
-                // Get the highest priority message the player has access to.
-                val hp = getHighestPriorityMessage(msg, path, player)
-                if (hp == -1)
+                // Get the selected message if it is still valid, otherwise use the highest priority message the player has access to.
+                val messageId = getPreferredMessageId(msg, path, player, visibility, action)
+                if (messageId == -1)
                     continue
 
-                val messagePath = "$path.$hp"
-                if (!MessageCondition.checkAllConditions(msg, messagePath))
+                val messagePath = "$path.$messageId"
+                if (!MessageCondition.checkAllConditions(msg, messagePath, player))
                     continue
 
                 val radius = msg.config.getOrDefault("$messagePath.Radius", -1.0)
@@ -86,11 +87,33 @@ class MessageSender(private val plugin: CustomJoinMessages) {
         }
     }
 
-    private fun getHighestPriorityMessage(msgType: MessageType, path: String, player: Player): Int {
+    fun getAvailableMessageIds(msgType: MessageType, path: String, player: Player): List<Int> {
         return msgType.config.singleLayerKeySet(path)
             .mapNotNull { it.toIntOrNull() }
-            .filter { player.hasPermission(msgType.config.getOrDefault("$path.$it.Permission", "cjm.default")) }
-            .maxOrNull() ?: -1
+            .filter { isMessageAccessible(msgType, path, player, it) }
+            .sortedDescending()
+    }
+
+    fun isMessageAccessible(msgType: MessageType, path: String, player: Player, id: Int): Boolean {
+        val messagePath = "$path.$id"
+        return msgType.config.contains(messagePath) && player.hasPermission(msgType.config.getOrDefault("$messagePath.Permission", "cjm.default"))
+    }
+
+    private fun getHighestPriorityMessage(msgType: MessageType, path: String, player: Player): Int {
+        return getAvailableMessageIds(msgType, path, player).maxOrNull() ?: -1
+    }
+
+    private fun getPreferredMessageId(msgType: MessageType, path: String, player: Player, visibility: MessageVisibility, action: MessageAction): Int {
+        val selected = plugin.selectionHandler.getSelection(player, msgType, visibility, action)
+        if (selected != null && isMessageAccessible(msgType, path, player, selected)) {
+            val selectedPath = "$path.$selected"
+            if (MessageCondition.checkAllConditions(msgType, selectedPath, player)) {
+                return selected
+            }
+        }
+        return getAvailableMessageIds(msgType, path, player)
+            .firstOrNull { MessageCondition.checkAllConditions(msgType, "$path.$it", player) }
+            ?: -1
     }
 
     private fun getReceivingPlayers(sourcePlayer: Player, visibility: MessageVisibility, action: MessageAction, radius: Double): List<Player> {

@@ -11,6 +11,10 @@ softdepend:
   - AuthMe
   - CMI
   - Essentials
+  - floodgate
+  - Geyser
+  - Geyser-Spigot
+  - HeadDatabase
   - PlaceholderAPI
   - PremiumVanish
   - SayanVanish
@@ -21,4 +25,6 @@ softdepend:
 
 permissions:
   cjm.default:
+    default: true
+  cjm.command.gui:
     default: true

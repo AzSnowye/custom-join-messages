@@ -132,4 +132,26 @@ class MessageConditionTest {
         assertFalse(result)
     }
 
+    @Test
+    fun playerType_JavaPlayerWithJavaType_Passes() {
+        val player = server.addPlayer()
+        val messageType = ChatMessage(plugin)
+        messageType.config.set("Public.Join.69.Player-Type", "JAVA")
+
+        val result = MessageCondition.PLAYER_TYPE.checkCondition(messageType, "Public.Join.69", player)
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun playerType_JavaPlayerWithBedrockType_Fails() {
+        val player = server.addPlayer()
+        val messageType = ChatMessage(plugin)
+        messageType.config.set("Public.Join.69.Player-Type", "BEDROCK")
+
+        val result = MessageCondition.PLAYER_TYPE.checkCondition(messageType, "Public.Join.69", player)
+
+        assertFalse(result)
+    }
+
 }

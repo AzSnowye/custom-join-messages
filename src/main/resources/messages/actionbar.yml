@@ -13,15 +13,29 @@ Public:
   Join:
     1:
       Permission: cjm.default
+      Player-Type: JAVA
       Messages:
         1:
           Message: "&a%name% &7has joined!"
+    2:
+      Permission: cjm.default
+      Player-Type: BEDROCK
+      Messages:
+        1:
+          Message: "&b%name% &7(Bedrock) has joined!"
   Quit:
     1:
       Permission: cjm.default
+      Player-Type: JAVA
       Messages:
         1:
           Message: "&a%name% &7has left!"
+    2:
+      Permission: cjm.default
+      Player-Type: BEDROCK
+      Messages:
+        1:
+          Message: "&b%name% &7(Bedrock) has left!"
 
 Private:
   First-Join:

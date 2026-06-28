@@ -21,6 +21,7 @@ import net.insprill.cjm.compatibility.hook.PluginHook
 import net.insprill.cjm.extension.getMessage
 import net.insprill.cjm.formatting.Formatter
 import net.insprill.cjm.formatting.FormatterType
+import net.insprill.cjm.gui.MessageSelectionGui
 import net.insprill.cjm.listener.JoinEvent
 import net.insprill.cjm.listener.QuitEvent
 import net.insprill.cjm.listener.WorldChangeEvent
@@ -30,6 +31,7 @@ import net.insprill.cjm.message.types.BossbarMessage
 import net.insprill.cjm.message.types.ChatMessage
 import net.insprill.cjm.message.types.SoundMessage
 import net.insprill.cjm.message.types.TitleMessage
+import net.insprill.cjm.selection.MessageSelectionHandler
 import net.insprill.cjm.toggle.ToggleHandler
 import net.insprill.cjm.update.UpdateChecker
 import net.insprill.cjm.util.FastOfflinePlayers
@@ -46,7 +48,10 @@ open class CustomJoinMessages : JavaPlugin() {
     lateinit var messageSender: MessageSender
     lateinit var hookManager: HookManager
     lateinit var toggleHandler: ToggleHandler
+    lateinit var selectionHandler: MessageSelectionHandler
+    lateinit var gui: MessageSelectionGui
     lateinit var config: Yaml
+    lateinit var guiConfig: Yaml
     lateinit var updateChecker: UpdateChecker
     lateinit var commandManager: BukkitCommandManager
     lateinit var worldChangeEvent: WorldChangeEvent
@@ -91,6 +96,13 @@ open class CustomJoinMessages : JavaPlugin() {
         cnfgLoaded = true
         config.forceReload()
 
+        guiConfig = SimplixBuilder.fromPath(Paths.get("$dataFolder/gui.yml"))
+            .addInputStreamFromResource("gui.yml")
+            .setConfigSettings(ConfigSettings.PRESERVE_COMMENTS)
+            .setDataType(DataType.SORTED)
+            .createYaml()
+            .addDefaultsFromInputStream()
+
         if (!ServerEnvironment.isMockBukkit()) {
             metrics = Metrics(this, BuildParameters.BSTATS_ID.toInt())
             metrics.addCustomChart(SimplePie("worldBasedMessages") {
@@ -104,11 +116,11 @@ open class CustomJoinMessages : JavaPlugin() {
         val pluginHooks = getPluginHooks()
         hookManager = HookManager(pluginHooks)
 
-        registerListeners()
-
         toggleHandler = ToggleHandler(this)
+        selectionHandler = MessageSelectionHandler(this)
 
         messageSender = MessageSender(this)
+        gui = MessageSelectionGui(this)
 
         val messageTypes = listOf(
             ActionbarMessage(this),
@@ -124,6 +136,8 @@ open class CustomJoinMessages : JavaPlugin() {
             }
             messageSender.registerType(it)
         }
+
+        registerListeners()
 
         registerCommands()
 
@@ -163,6 +177,7 @@ open class CustomJoinMessages : JavaPlugin() {
 
     private fun registerListeners() {
         Bukkit.getPluginManager().registerEvents(FastOfflinePlayers, this)
+        Bukkit.getPluginManager().registerEvents(gui, this)
 
         var registeredAuthListener = false
         for (listener in hookManager.authHooks) {

@@ -17,6 +17,7 @@ Public:
   Join:
     1:
       Permission: cjm.default
+      Player-Type: JAVA
       Messages:
         1:
           Message: "&a%name% &7has joined!"
@@ -24,12 +25,33 @@ Public:
           Bar-Style: SOLID
           Show-Time: 60
           Count-Down: true
+    2:
+      Permission: cjm.default
+      Player-Type: BEDROCK
+      Messages:
+        1:
+          Message: "&b%name% &7(Bedrock) has joined!"
+          Bar-Color: GREEN
+          Bar-Style: SOLID
+          Show-Time: 60
+          Count-Down: true
   Quit:
     1:
       Permission: cjm.default
+      Player-Type: JAVA
       Messages:
         1:
           Message: "&a%name% &7has left!"
+          Bar-Color: RED
+          Bar-Style: SOLID
+          Show-Time: 60
+          Count-Down: true
+    2:
+      Permission: cjm.default
+      Player-Type: BEDROCK
+      Messages:
+        1:
+          Message: "&b%name% &7(Bedrock) has left!"
           Bar-Color: RED
           Bar-Style: SOLID
           Show-Time: 60

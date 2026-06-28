@@ -17,6 +17,7 @@ Public:
   Join:
     1:
       Permission: cjm.default
+      Player-Type: JAVA
       Messages:
         1:
           Title: "&a%name% &7has joined the server!"
@@ -24,12 +25,33 @@ Public:
           Fade-In: 10
           Stay: 80
           Fade-Out: 10
+    2:
+      Permission: cjm.default
+      Player-Type: BEDROCK
+      Messages:
+        1:
+          Title: "&b%name% &7(Bedrock) has joined the server!"
+          SubTitle: ""
+          Fade-In: 10
+          Stay: 80
+          Fade-Out: 10
   Quit:
     1:
       Permission: cjm.default
+      Player-Type: JAVA
       Messages:
         1:
           Title: "&a%name% &7has left!"
+          SubTitle: ""
+          Fade-In: 10
+          Stay: 80
+          Fade-Out: 10
+    2:
+      Permission: cjm.default
+      Player-Type: BEDROCK
+      Messages:
+        1:
+          Title: "&b%name% &7(Bedrock) has left!"
           SubTitle: ""
           Fade-In: 10
           Stay: 80

@@ -89,6 +89,14 @@ class CjmCommand(private val manager: BukkitCommandManager, private val plugin: 
         manager.sendInfo(sender, "cjm.command.toggle.${if (toggledTo) "on" else "off"}", "%action%", action.name.lowercase())
     }
 
+    @Subcommand("gui|menu")
+    @CommandPermission("cjm.command.gui")
+    @Description("{@@cjm.command.gui.description}")
+    @Suppress("UNUSED_PARAMETER")
+    fun onGui(sender: Player) {
+        plugin.gui.openRoot(sender)
+    }
+
     @Subcommand("reload")
     @CommandPermission("cjm.command.reload")
     fun onReload(sender: CommandSender) {

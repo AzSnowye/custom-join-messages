@@ -123,6 +123,12 @@ tasks {
     test {
         useJUnitPlatform()
     }
+
+    withType<Jar>().configureEach {
+        if (name == "sourcesJar" || name.contains("sources", ignoreCase = true)) {
+            enabled = false
+        }
+    }
 }
 
 configurations {

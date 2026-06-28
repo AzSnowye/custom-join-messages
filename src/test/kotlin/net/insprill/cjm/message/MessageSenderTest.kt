@@ -163,6 +163,31 @@ class MessageSenderTest {
     }
 
     @Test
+    fun trySendMessages_SelectedMessage_UsesSelectedInsteadOfHighest() {
+        messageTypeMock.config.set("Public.Join.2.Messages.1.Message", "Yup")
+        messageTypeMock.config.set("Public.Join.2.Permission", "cjm.2")
+        player.addAttachment(plugin, "cjm.2", true)
+        plugin.selectionHandler.setSelection(player, messageTypeMock, MessageVisibility.PUBLIC, MessageAction.JOIN, 1)
+
+        messageSender.trySendMessages(player, MessageAction.JOIN, true)
+
+        messageTypeMock.assertHasResult()
+        assertEquals("Public.Join.1.Messages.1", messageTypeMock.result.chosenPath)
+    }
+
+    @Test
+    fun trySendMessages_SelectedMessageWithoutPermission_FallsBackToHighest() {
+        messageTypeMock.config.set("Public.Join.2.Messages.1.Message", "Yup")
+        messageTypeMock.config.set("Public.Join.2.Permission", "cjm.2")
+        plugin.selectionHandler.setSelection(player, messageTypeMock, MessageVisibility.PUBLIC, MessageAction.JOIN, 2)
+
+        messageSender.trySendMessages(player, MessageAction.JOIN, true)
+
+        messageTypeMock.assertHasResult()
+        assertEquals("Public.Join.1.Messages.1", messageTypeMock.result.chosenPath)
+    }
+
+    @Test
     fun trySendMessages_HasNoPerms_NoMessageSent() {
         player.addAttachment(plugin, "cjm.default", false)
 
@@ -177,7 +202,19 @@ class MessageSenderTest {
 
         messageSender.trySendMessages(player, MessageAction.JOIN, true)
 
-        messageTypeMock.assertDoesntHaveResult()
+        messageTypeMock.assertHasResult()
+        assertEquals("Public.Join.1.Messages.1", messageTypeMock.result.chosenPath)
+    }
+
+    @Test
+    fun trySendMessages_BedrockOnlyHigherPriority_FallsBackToJavaMessage() {
+        messageTypeMock.config.set("Public.Join.2.Messages.1.Message", "Bedrock path")
+        messageTypeMock.config.set("Public.Join.2.Player-Type", "BEDROCK")
+
+        messageSender.trySendMessages(player, MessageAction.JOIN, true)
+
+        messageTypeMock.assertHasResult()
+        assertEquals("Public.Join.1.Messages.1", messageTypeMock.result.chosenPath)
     }
 
     @Test
