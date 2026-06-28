@@ -1,0 +1,53 @@
+# Settings for the player selection GUI.
+Selection-Menu:
+  Action-Title: "&aSelect Message Action"
+  Visibility-Title: "&aChoose Visibility"
+  Type-Title: "&aChoose Message Type"
+  Id-Title: "&aChoose Message ID"
+
+  Action-Menu:
+    Join:
+      Slot: 11
+      Material: PAPER
+      Name: "&aJoin Messages"
+      Lore:
+        - "&7%count% type(s) available"
+        - "&8Click to continue"
+    Leave:
+      Slot: 15
+      Material: BARRIER
+      Name: "&cLeave Messages"
+      Lore:
+        - "&7%count% type(s) available"
+        - "&8Click to continue"
+
+  Defaults:
+    # Default material for non-selected message IDs.
+    # Supports normal materials and HeadDatabase format: HDB:<id>
+    Material: PAPER
+    # Default material for selected message IDs.
+    Selected-Material: LIME_DYE
+    Name: "&eID %display_id%"
+    Lore:
+      - "&7Type: &f%type%"
+      - "&7Action: &f%action%"
+      - "&7Visibility: &f%visibility%"
+      - "&7Permission: &f%permission%"
+      - "&7Preview: &f%preview%"
+      - "&8Click to select this ID"
+
+  # Optional per-ID override entries.
+  # Path format:
+  # Items.<type>.<visibility>.<action>.<id>
+  # Example:
+  # Items.chat.public.join.1:
+  #   Display-Id: "VIP-01"
+  #   Material: "HDB:24888"
+  #   Name: "&6VIP Join"
+  #   Permission: "cjm.join.vip"
+  #   Preview: "&a%name% joined as VIP!"
+  #   Lore:
+  #     - "&7Custom lore line 1"
+  #     - "&7Custom lore line 2"
+  Items: {}
+
